@@ -1,11 +1,9 @@
 <?php
 
-namespace App\factories;
+namespace App\database\factories;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\Driver\AnnotationDriver;
 use Doctrine\ORM\ORMSetup;
-use Doctrine\ORM\Tools\Setup;
 
 class EntityManagerFactory
 {

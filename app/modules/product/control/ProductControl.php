@@ -2,13 +2,12 @@
 
 namespace App\modules\product\control;
 
-
 use App\modules\product\boundary\IProductBoundary;
 use App\modules\product\boundary\ProductBoundary;
 use App\modules\product\entity\Product;
 use App\modules\product\entity\IProductGateway;
 
-class ProductControl implements IProductControl, IProductBoundary
+class ProductControl implements IProductControl
 {
     private IProductGateway $productGateway;
     private IProductBoundary $productBoundary;
@@ -27,14 +26,21 @@ class ProductControl implements IProductControl, IProductBoundary
         return $product;
     }
 
-    public function getProduct(int $id): ?Product
+    public function getProductById(int $id): ?Product
     {
-        return $this->productGateway->find($id);
+
+        $data = $this->productGateway->find($id);
+
+        $this->productBoundary->render($data);
+        return $data;
     }
 
     public function getAllProducts(): array
     {
-        return $this->productGateway->findAll();
+        $data = $this->productGateway->findAll();
+        $this->productBoundary->render($data);
+
+        return $data;
     }
 
     public function updateProduct(int $id, string $name, float $price): bool

@@ -8,7 +8,7 @@ interface IProductControl
 {
     public function createProduct(string $name, float $price): Product;
 
-    public function getProduct(int $id): ?Product;
+    public function getProductById(int $id): ?Product;
 
     public function getAllProducts(): array;
 

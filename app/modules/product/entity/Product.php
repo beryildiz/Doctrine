@@ -62,4 +62,9 @@ class Product
     {
         $this->price = $price;
     }
+
+    public function __toString()
+    {
+        return $this->getId() . " " . $this->getName() . " " . $this->getPrice();
+    }
 }
