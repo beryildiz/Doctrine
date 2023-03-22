@@ -2,7 +2,7 @@
 
 namespace App\modules\product\entity;
 
-interface ProductGatewayInterface
+interface IProductGateway
 {
     public function save(Product $product): void;
 

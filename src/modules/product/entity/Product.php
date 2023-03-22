@@ -27,6 +27,17 @@ class Product
      */
     private float $price;
 
+    /**
+     * @param string $name
+     * @param float $price
+     */
+    public function __construct(string $name, float $price)
+    {
+        $this->name = $name;
+        $this->price = $price;
+    }
+
+
     public function getId(): int
     {
         return $this->id;

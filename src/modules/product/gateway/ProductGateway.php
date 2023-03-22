@@ -3,10 +3,10 @@
 namespace App\modules\product\gateway;
 
 use App\modules\product\entity\Product;
-use App\modules\product\entity\ProductGatewayInterface;
+use App\modules\product\entity\IProductGateway;
 use Doctrine\ORM\EntityManager;
 
-class ProductGateway implements ProductGatewayInterface
+class ProductGateway implements IProductGateway
 {
     private EntityManager $entityManager;
 

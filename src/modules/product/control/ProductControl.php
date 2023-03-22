@@ -3,24 +3,25 @@
 namespace App\modules\product\control;
 
 
+use App\modules\product\boundary\IProductBoundary;
+use App\modules\product\boundary\ProductBoundary;
 use App\modules\product\entity\Product;
-use App\modules\product\entity\ProductGatewayInterface;
+use App\modules\product\entity\IProductGateway;
 
-class ProductControl implements ProductControlInterface
+class ProductControl implements IProductControl, IProductBoundary
 {
-    private ProductGatewayInterface $productGateway;
+    private IProductGateway $productGateway;
+    private IProductBoundary $productBoundary;
 
-    public function __construct(ProductGatewayInterface $productGateway)
+    public function __construct(IProductGateway $productGateway)
     {
         $this->productGateway = $productGateway;
+        $this->productBoundary = new ProductBoundary($this);
     }
 
     public function createProduct(string $name, float $price): Product
     {
-        $product = new Product();
-        $product->setName($name);
-        $product->setPrice($price);
-
+        $product = new Product($name, $price);
         $this->productGateway->save($product);
 
         return $product;
@@ -29,6 +30,11 @@ class ProductControl implements ProductControlInterface
     public function getProduct(int $id): ?Product
     {
         return $this->productGateway->find($id);
+    }
+
+    public function getAllProducts(): array
+    {
+        return $this->productGateway->findAll();
     }
 
     public function updateProduct(int $id, string $name, float $price): bool
@@ -59,4 +65,17 @@ class ProductControl implements ProductControlInterface
 
         return true;
     }
+
+
+    public function renderProduct($productId)
+    {
+        $this->productBoundary->renderProduct($productId);
+    }
+
+    public function renderAllProducts()
+    {
+        $this->productBoundary->renderAllProducts();
+    }
+
+
 }

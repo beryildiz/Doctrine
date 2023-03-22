@@ -5,48 +5,27 @@ namespace App\modules\product\boundary;
 
 use App\modules\product\control\ProductControl;
 
-class ProductBoundary implements ProductBoundaryInterface
+class ProductBoundary implements IProductBoundary
 {
     private ProductControl $productControl;
+    private ProductPresenter $productPresenter;
 
     public function __construct(ProductControl $productControl)
     {
         $this->productControl = $productControl;
+        $this->productPresenter = new ProductPresenter();
     }
 
-    public function createProduct(string $name, float $price): array
-    {
-        $product = $this->productControl->createProduct($name, $price);
 
-        return [
-            'id' => $product->getId(),
-            'name' => $product->getName(),
-            'price' => $product->getPrice(),
-        ];
+    public function renderProduct($productId)
+    {
+        $data = $this->productControl->getProduct($productId);
+        $this->productPresenter->presentData($data);
     }
 
-    public function getProduct(int $id): ?array
+    public function renderAllProducts()
     {
-        $product = $this->productControl->getProduct($id);
-
-        if ($product) {
-            return [
-                'id' => $product->getId(),
-                'name' => $product->getName(),
-                'price' => $product->getPrice(),
-            ];
-        } else {
-            return null;
-        }
-    }
-
-    public function updateProduct(int $id, string $name, float $price): bool
-    {
-        return $this->productControl->updateProduct($id, $name, $price);
-    }
-
-    public function deleteProduct(int $id): bool
-    {
-        return $this->productControl->deleteProduct($id);
+        $data = $this->productControl->getAllProducts();
+        $this->productPresenter->presentData($data);
     }
 }
