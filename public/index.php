@@ -6,27 +6,28 @@ use App\modules\product\control\ProductControl;
 use App\router\Router;
 
 require_once __DIR__ . "/../vendor/autoload.php";
+require_once __DIR__ . "/../security/sanitize.php";
 
-$pathInfo = $_SERVER["PATH_INFO"];
+define('APPLICATION_PATH', substr(realpath(dirname(__FILE__)), 0, -6));
+
 
 $container = new Container();
 $router = new Router($container);
 
 
-// Todo: Path params fetchen
-if (isset($pathInfo)) {
-    $link = explode("/", $pathInfo);
-    // $pathParam = $link[2];
-
-
-    $router->addRoute("/products", ProductControl::class, "getAllProducts", null);
-    // $router->addRoute("/products/{$pathParam}", ProductControl::class, "getProductById", $pathParam);
-
-
-    $router->dispatch($pathInfo);
-} else {
-    $router->dispatch("index.php");
+// Wie bekommt man die {id} von der url rein.
+if (isset($_SERVER['PATH_INFO'])) {
+    $router->addRoute("/products", ProductControl::class, "index", "product");
+    $router->addRoute("/products/{id}", ProductControl::class, "index", "create");
+    $router->addRoute("/products/create", ProductControl::class, "index", "create");
+    $router->dispatch($_SERVER['PATH_INFO']);
 }
+
+
+
+
+
+
 
 
 

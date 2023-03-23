@@ -2,86 +2,70 @@
 
 namespace App\modules\product\control;
 
-use App\modules\product\boundary\IProductBoundary;
-use App\modules\product\boundary\ProductBoundary;
-use App\modules\product\entity\Product;
 use App\modules\product\entity\IProductGateway;
+use App\modules\product\entity\Product;
+use App\shared\Controller;
+use App\shared\View;
 
-class ProductControl implements IProductControl
+class ProductControl extends Controller implements IProductControl
 {
     private IProductGateway $productGateway;
-    private IProductBoundary $productBoundary;
 
     public function __construct(IProductGateway $productGateway)
     {
         $this->productGateway = $productGateway;
-        $this->productBoundary = new ProductBoundary($this);
     }
 
-    public function createProduct(string $name, float $price): Product
+    public function createProduct(string $name, float $price): bool
     {
         $product = new Product($name, $price);
         $this->productGateway->save($product);
 
-        return $product;
+        return true;
     }
 
-    public function getProductById(int $id): ?Product
+    public function getProductById(int $id): Product
     {
-
-        $data = $this->productGateway->find($id);
-
-        $this->productBoundary->render($data);
-        return $data;
+        return $this->productGateway->find($id);
     }
 
     public function getAllProducts(): array
     {
-        $data = $this->productGateway->findAll();
-        $this->productBoundary->render($data);
-
-        return $data;
+        return $this->productGateway->findAll();
     }
 
     public function updateProduct(int $id, string $name, float $price): bool
     {
         $product = $this->productGateway->find($id);
 
-        if (!$product) {
-            return false;
+        if (isset($product)) {
+            $product->setName($name);
+            $product->setPrice($price);
+            $this->productGateway->save($product);
+
+            return true;
         }
-
-        $product->setName($name);
-        $product->setPrice($price);
-
-        $this->productGateway->save($product);
-
-        return true;
+        return false;
     }
 
     public function deleteProduct(int $id): bool
     {
         $product = $this->productGateway->find($id);
+        if (isset($product)) {
+            $this->productGateway->delete($product);
 
-        if (!$product) {
-            return false;
+            return true;
         }
 
-        $this->productGateway->delete($product);
-
-        return true;
+        return false;
     }
 
 
-    public function renderProduct($productId)
+    public function index(string $view)
     {
-        $this->productBoundary->renderProduct($productId);
-    }
+        $params = $this->getAllProducts();
 
-    public function renderAllProducts()
-    {
-        $this->productBoundary->renderAllProducts();
+        View::render("product", $view, $params, $this);
     }
-
 
 }
