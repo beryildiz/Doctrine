@@ -1,0 +1,20 @@
+name: PHP_CodeSniffer
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  phpcs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install PHP_CodeSniffer
+        run: composer global require "squizlabs/php_codesniffer=*"
+      - name: Run PHP_CodeSniffer
+        run: ~/.composer/vendor/bin/phpcs . --standard=PSR12
