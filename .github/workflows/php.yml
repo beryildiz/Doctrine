@@ -15,8 +15,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install PHP_CodeSniffer
-        run: |
-          composer global require "squizlabs/php_codesniffer=*"
-          export PATH="$PATH:$HOME/.composer/vendor/bin"
+        run: composer global require "squizlabs/php_codesniffer=*"
       - name: Run PHP_CodeSniffer
-        run: phpcs . --standard=PSR12
+        run: ~/.composer/vendor/bin/phpcs . --standard=PSR12
